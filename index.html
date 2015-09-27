@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Asteroids</title>
+  </head>
+  <body>
+    <canvas style="border: 1px solid black" id="gameCanvas" width="1000" height="500"></canvas>
+    <script type="text/javascript" src="keymaster.js"></script>
+    <script type="text/javascript" src="util.js"></script>
+    <script type="text/javascript" src="movingObject.js"></script>
+    <script type="text/javascript" src="asteroid.js"></script>
+    <script type="text/javascript" src="ship.js"></script>
+    <script type="text/javascript" src="bullet.js"></script>
+    <script type="text/javascript" src="game.js"></script>
+    <script type="text/javascript" src="gameView.js"></script>
+    <script>
+      var ctx = document.getElementById('gameCanvas').getContext('2d');
+      var gameView = new Asteroids.GameView(ctx);
+      gameView.start();
+    </script>
+
+  </body>
+</html>
