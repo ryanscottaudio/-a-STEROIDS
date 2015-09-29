@@ -1,19 +1,20 @@
 (function() {
   window.Asteroids = window.Asteroids || {};
-  var Bullet = window.Asteroids.Bullet = function(hash) {
+  var Bullet = window.Asteroids.Bullet = function(options) {
     Asteroids.MovingObject.call(this, {
-      pos: hash.pos,
-      vel: hash.vel,
+      pos: options.pos,
+      speed: options.speed,
+      angle: options.angle,
       radius: Bullet.RADIUS,
       color: Bullet.COLOR,
-      game: hash.game,
+      game: options.game,
       wrappable: false
     });
   };
 
   Asteroids.Util.inherits(Bullet, Asteroids.MovingObject);
 
-  Bullet.COLOR = '#000';
+  Bullet.COLOR = '#f00';
   Bullet.RADIUS = 5;
 
   Bullet.prototype.collideWith = function(otherObject) {

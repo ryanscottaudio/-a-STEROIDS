@@ -10,6 +10,12 @@
     childClass.prototype = new Surrogate();
   };
 
+  Util.calcVec = function(speed, angle) {
+    var x = speed * Math.cos(angle);
+    var y = speed * Math.sin(angle);
+    return [x,y];
+  },
+
   Util.randomVec = function(length){
     var theta = Math.random() * 2 * Math.PI;
     return [ length * Math.cos(theta), length * Math.sin(theta) ];
@@ -27,18 +33,18 @@
     return [vel[0] * 10 / hypotenuse, vel[1] * 10 / hypotenuse];
   };
 
-  Util.angle = function(vel) {
-    if (vel[0] === 0 && vel[1] === 0) {
-      return -Math.PI / 2;
-    } else if (vel[0] >= 0 && vel[1] > 0) {
-      return Math.atan(vel[1]/vel[0]);
-    } else if (vel[0] >= 0 && vel[1] <= 0) {
-      return Math.atan(vel[1]/vel[0]);
-    } else if (vel[0] <= 0 && vel[1] < 0) {
-      return Math.atan(vel[1]/vel[0]) + Math.PI;
-    } else if (vel[0] < 0 && vel[1] >= 0) {
-      return Math.atan(vel[1]/vel[0]) + Math.PI;
-    };
-  };
+  // Util.angle = function(vel) {
+  //   if (vel[0] === 0 && vel[1] === 0) {
+  //     return -Math.PI / 2;
+  //   } else if (vel[0] >= 0 && vel[1] > 0) {
+  //     return Math.atan(vel[1]/vel[0]);
+  //   } else if (vel[0] >= 0 && vel[1] <= 0) {
+  //     return Math.atan(vel[1]/vel[0]);
+  //   } else if (vel[0] <= 0 && vel[1] < 0) {
+  //     return Math.atan(vel[1]/vel[0]) + Math.PI;
+  //   } else if (vel[0] < 0 && vel[1] >= 0) {
+  //     return Math.atan(vel[1]/vel[0]) + Math.PI;
+  //   };
+  // };
 
 })();

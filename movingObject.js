@@ -1,25 +1,32 @@
 (function(){
   window.Asteroids = window.Asteroids || {};
-  var MovingObject = window.Asteroids.MovingObject = function(hash){
-    this.pos = hash['pos'];
-    this.vel = hash['vel'];
-    this.color = hash['color'];
-    this.radius = hash['radius'];
-    this.game = hash['game'];
-    this.wrappable = hash.wrappable;
+  var MovingObject = window.Asteroids.MovingObject = function(options){
+    this.pos = options['pos'];
+    this.speed = options['speed'];
+    this.angle = options['angle'];
+    this.color = options['color'];
+    this.radius = options['radius'];
+    this.game = options['game'];
+    this.wrappable = options.wrappable;
   };
 
   MovingObject.prototype.draw = function(ctx){
     ctx.fillStyle = this.color;
     ctx.beginPath();
     ctx.arc(this.pos[0], this.pos[1], this.radius,
-      Asteroids.Util.angle(this.vel) - 2,
-      Asteroids.Util.angle(this.vel) + 2,
+      this.angle - 2,
+      this.angle + 2,
       false);
+    ctx.lineTo(this.pos[0], this.pos[1]);
+    ctx.closePath();
     ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#FFF';
+    ctx.stroke();
   };
 
   MovingObject.prototype.move = function() {
+    this.vel = Asteroids.Util.calcVec(this.speed, this.angle)
     this.pos[0] += this.vel[0];
     this.pos[1] += this.vel[1];
     if (this.wrappable === true) {
