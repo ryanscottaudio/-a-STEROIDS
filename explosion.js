@@ -35,8 +35,8 @@
       false);
     ctx.fill();
 
-    ctx.lineWidth = 10;
-    ctx.strokeStyle = 'rgba(255, 0, 0, ' + this.transparency + ')';
+    ctx.lineWidth = 20;
+    ctx.strokeStyle = 'rgba(255, 153, 0, ' + this.transparency + ')';
     ctx.stroke();
 
     this.radius += 2
