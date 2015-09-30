@@ -26,7 +26,14 @@
 
   Asteroid.prototype.collideWith = function (otherObject) {
     if (otherObject instanceof Asteroids.Ship && !otherObject.protected) {
-      otherObject.relocate();
+      var ship = otherObject;
+      this.game.remove(ship);
+      this.game.explode(ship.pos);
+      window.setTimeout(function() {
+        this.game.objects.unshift(ship);
+        ship.relocate();
+        ship.radius = Asteroids.Ship.RADIUS;
+      }.bind(this), 2000)
     };
   };
 

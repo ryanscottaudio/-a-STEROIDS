@@ -59,7 +59,7 @@
             ship.right = true;
             break;
           case "U+0020":
-            ship.fireBullet();
+            ship.shooting = true;
             break;
         }
       }
@@ -79,6 +79,9 @@
             break;
           case "Right":
             ship.right = false;
+            break;
+          case "U+0020":
+            ship.shooting = false;
             break;
         }
       }

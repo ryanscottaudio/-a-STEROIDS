@@ -35,7 +35,6 @@
         var newAst = new Asteroids.Asteroid({
           game: this,
           pos: [asteroid.pos[0], asteroid.pos[1]],
-          // angle: Math.random() * 2 * Math.PI,
           radius: asteroid.radius / 3,
           speed: asteroid.speed * 1.25,
           broken: true,
@@ -50,7 +49,6 @@
   };
 
   Game.prototype.draw = function(ctx) {
-    // ctx.clearRect(0, 0, Game.DIM_X, Game.DIM_Y);
     ctx.fillStyle="#000";
     ctx.fillRect(0, 0, Game.DIM_X, Game.DIM_Y);
     if (this.phase === "playing" || this.phase === "leveling") {
@@ -94,6 +92,7 @@
 
     if (ast instanceof Asteroids.Asteroid) {
       this.addNewAsts(ast);
+      this.explode(ast.pos);
     }
 
     if (this.checkAst()) {
@@ -116,6 +115,7 @@
       this.level += 1;
       this.phase = "leveling";
       window.setTimeout(function() {
+        this.ship.protect();
         this.addAsteroids();
         this.phase = "playing";
       }.bind(this), 2500);
@@ -135,6 +135,14 @@
     pos[0] = (pos[0] + Game.DIM_X) % Game.DIM_X;
     pos[1] = (pos[1] + Game.DIM_Y) % Game.DIM_Y;
     return pos;
+  };
+
+  Game.prototype.explode = function (pos) {
+    var explosion = new Asteroids.Explosion({
+      pos: [pos[0], pos[1]],
+      game: this,
+    })
+    this.add(explosion);
   };
 
 })();
