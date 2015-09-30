@@ -21,7 +21,11 @@
 
   GameView.prototype.setUp = function() {
     window.removeEventListener('mouseup', listener);
-    this.start();
+    this.game.phase = "leveling";
+    window.setTimeout(function() {
+      this.game.phase = "playing";
+      this.start();
+    }.bind(this), 2500);
   };
 
   GameView.prototype.menu = function() {
@@ -34,19 +38,51 @@
   };
 
   GameView.prototype.start = function() {
-    this.started = true;
-    this.game.started = true;
     this.game.addShip();
     this.bindKeyHandlers();
   };
 
   GameView.prototype.bindKeyHandlers = function() {
-    var ship = this.game.ship;
-    // key('down', function(){ ship.power(-1) });
-    key('up', function(){ ship.power(1) })
-    key('left', function(){ ship.turn(-.5) });
-    key('right', function(){ ship.turn(.5) });
-    key('space', function(){ ship.fireBullet() });
+    window.addEventListener('keydown', function(e) {
+      e.preventDefault();
+
+      var ship = this.game.ship;
+      if (ship) {
+        switch (e.keyIdentifier) {
+          case "Up":
+            ship.forward = true;
+            break;
+          case "Left":
+            ship.left = true;
+            break;
+          case "Right":
+            ship.right = true;
+            break;
+          case "U+0020":
+            ship.fireBullet();
+            break;
+        }
+      }
+    }.bind(this))
+
+    window.addEventListener('keyup', function(e) {
+      e.preventDefault();
+
+      var ship = this.game.ship;
+      if (ship) {
+        switch (e.keyIdentifier) {
+          case "Up":
+            ship.forward = false;
+            break;
+          case "Left":
+            ship.left = false;
+            break;
+          case "Right":
+            ship.right = false;
+            break;
+        }
+      }
+    }.bind(this))
   };
 
 })();

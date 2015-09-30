@@ -8,7 +8,7 @@
       radius: Bullet.RADIUS,
       color: Bullet.COLOR,
       game: options.game,
-      wrappable: false
+      wrappable: false,
     });
   };
 
@@ -19,8 +19,9 @@
 
   Bullet.prototype.collideWith = function(otherObject) {
     if (otherObject instanceof Asteroids.Asteroid) {
-      this.game.remove(otherObject);
       this.game.remove(this);
+      this.game.remove(otherObject);
+      this.game.ship.radius += 2.5;
     };
   };
 })();

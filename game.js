@@ -1,23 +1,22 @@
 (function (){
   window.Asteroids = window.Asteroids || {};
-  var Game = window.Asteroids.Game = function() {
+  var Game = window.Asteroids.Game = function(ctx) {
     Game.DIM_X = ctx.canvas.width;
     Game.DIM_Y = ctx.canvas.height;
-    this.started = false;
-    this.over = false;
+    this.phase = "before";
+    this.level = 1;
     this.objects = [];
     this.addAsteroids();
     this.menu = new Asteroids.Menu({game: this});
-    ctx = ctx;
+    this.ctx = ctx;
   };
 
-  Game.NUM_ASTEROIDS = 5;
+  Game.NUM_ASTEROIDS = 2;
 
   Game.prototype.addShip = function() {
     this.ship = new Asteroids.Ship({game: this});
     this.objects.unshift(this.ship);
     this.lives = 5;
-    this.level = 1;
   };
 
   Game.prototype.add = function(obj) {
@@ -25,10 +24,25 @@
   };
 
   Game.prototype.addAsteroids = function () {
-    this.asteroids = [];
-    for (var i = 0; i < Game.NUM_ASTEROIDS; i++) {
+    for (var i = 0; i < Game.NUM_ASTEROIDS + this.level; i++) {
       this.add(new Asteroids.Asteroid( {game: this} ));
     };
+  };
+
+  Game.prototype.addNewAsts = function (asteroid) {
+    if (!asteroid.broken) {
+      for (var i = 0; i < 3; i++) {
+        var newAst = new Asteroids.Asteroid({
+          game: this,
+          pos: [asteroid.pos[0], asteroid.pos[1]],
+          // angle: Math.random() * 2 * Math.PI,
+          radius: asteroid.radius / 3,
+          speed: asteroid.speed * 1.25,
+          broken: true,
+        });
+        this.add(newAst);
+      }
+    }
   };
 
   Game.randomPosition = function () {
@@ -39,13 +53,13 @@
     // ctx.clearRect(0, 0, Game.DIM_X, Game.DIM_Y);
     ctx.fillStyle="#000";
     ctx.fillRect(0, 0, Game.DIM_X, Game.DIM_Y);
-    if (this.started) {
+    if (this.phase === "playing" || this.phase === "leveling") {
       this.menu.draw(ctx);
     }
     this.objects.forEach(function(object){
       object.draw(ctx);
     });
-    if (!this.started) {
+    if (this.phase === "before" || this.phase === "after") {
       this.menu.draw(ctx);
     }
   }
@@ -77,12 +91,44 @@
 
   Game.prototype.remove = function (ast) {
     this.objects.splice(this.objects.indexOf(ast), 1);
+
+    if (ast instanceof Asteroids.Asteroid) {
+      this.addNewAsts(ast);
+    }
+
+    if (this.checkAst()) {
+      this.nextLevel();
+    }
+  };
+
+  Game.prototype.checkAst = function () {
+    noAst = true;
+    this.objects.forEach(function (obj) {
+      if (obj instanceof Asteroids.Asteroid) {
+        noAst = false;
+      }
+    });
+    return noAst;
+  };
+
+  Game.prototype.nextLevel = function () {
+    if (this.phase !== "leveling") {
+      this.level += 1;
+      this.phase = "leveling";
+      window.setTimeout(function() {
+        this.addAsteroids();
+        this.phase = "playing";
+      }.bind(this), 2500);
+    }
   };
 
   Game.prototype.end = function () {
-    this.over = true;
-    this.started = false;
+    this.phase = "after";
     this.objects.shift();
+    this.ship = null;
+    window.setTimeout(function() {
+      window.location.reload();
+    }, 5000);
   };
 
   Game.wrap = function (pos) {

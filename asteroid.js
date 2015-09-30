@@ -1,30 +1,31 @@
 (function() {
   window.Asteroids = window.Asteroids || {};
-  var Asteroid = window.Asteroids.Asteroid = function(hash) {
+  var Asteroid = window.Asteroids.Asteroid = function(options) {
     Asteroids.MovingObject.call(this, {
-      pos: Asteroids.Game.randomPosition(),
+      pos: options.pos || Asteroids.Game.randomPosition(),
       angle: Math.random() * 2 * Math.PI,
       color: Asteroid.COLOR,
-      game: hash['game'],
-      wrappable: true
+      game: options.game,
+      wrappable: true,
     });
-    this.setSpeedAndRadius();
+    this.broken = options.broken || false;
+    this.setSpeedAndRadius(options);
   };
 
   Asteroids.Util.inherits(Asteroid, Asteroids.MovingObject);
 
   Asteroid.COLOR = '#999';
-  Asteroid.RADIUS = 25;
-  Asteroid.SPEED = 3;
+  Asteroid.RADIUS = 50;
+  Asteroid.SPEED = 5;
 
-  Asteroid.prototype.setSpeedAndRadius = function () {
+  Asteroid.prototype.setSpeedAndRadius = function (options) {
     var random = Math.random();
-    this.radius = random * Asteroid.RADIUS + 10;
-    this.speed = (1 - random) * Asteroid.SPEED + 2;
+    this.radius = options.radius || random * Asteroid.RADIUS + 20;
+    this.speed = options.speed || (1 - random) * Asteroid.SPEED + this.game.level;
   };
 
   Asteroid.prototype.collideWith = function (otherObject) {
-    if (otherObject instanceof Asteroids.Ship) {
+    if (otherObject instanceof Asteroids.Ship && !otherObject.protected) {
       otherObject.relocate();
     };
   };

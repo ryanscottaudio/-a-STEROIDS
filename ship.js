@@ -8,10 +8,15 @@
       speed: 0,
       angle: 0,
       game: options.game,
-      wrappable: true
+      wrappable: true,
     })
+    this.forward = false;
+    this.left = false;
+    this.right = false;
     this.orientation = 0;
+    this.protected = false;
     this.vel = Asteroids.Util.calcVec(this.speed, this.orientation);
+    this.protect();
   }
   Asteroids.Util.inherits(Ship, Asteroids.MovingObject)
   Ship.RADIUS = 20;
@@ -26,25 +31,17 @@
     this.pos = Asteroids.Game.randomPosition();
     this.speed = 0;
     this.vel = Asteroids.Util.calcVec(this.speed, this.orientation);
-  };
-
-  Ship.prototype.power = function (speed) {
-    this.newSpeed = speed;
-    this.newVel = Asteroids.Util.calcVec(this.newSpeed, this.angle)
-  };
-
-  Ship.prototype.turn = function (angle) {
-    this.angle += angle;
+    this.protect();
   };
 
   Ship.prototype.drawExhaust = function (ctx) {
     ctx.fillStyle = "orange";
     ctx.beginPath();
-    ctx.moveTo(this.pos[0] - Math.cos(this.angle) * 5, this.pos[1] - Math.sin(this.angle) * 5);
-    ctx.lineTo(this.pos[0] + Math.cos(this.angle - ((2.5 * Math.PI) / 3)) * 25,
-      this.pos[1] + Math.sin(this.angle - ((2.5 * Math.PI) / 3)) * 25);
-    ctx.lineTo(this.pos[0] + Math.cos(this.angle + ((2.5 * Math.PI) / 3)) * 25,
-      this.pos[1] + Math.sin(this.angle + ((2.5 * Math.PI) / 3)) * 25);
+    ctx.moveTo(this.pos[0] - Math.cos(this.angle) * 10, this.pos[1] - Math.sin(this.angle) * 10);
+    ctx.lineTo(this.pos[0] + Math.cos(this.angle - ((2.5 * Math.PI) / 3)) * (this.radius + 10),
+      this.pos[1] + Math.sin(this.angle - ((2.5 * Math.PI) / 3)) * (this.radius + 10));
+    ctx.lineTo(this.pos[0] + Math.cos(this.angle + ((2.5 * Math.PI) / 3)) * (this.radius + 10),
+      this.pos[1] + Math.sin(this.angle + ((2.5 * Math.PI) / 3)) * (this.radius + 10));
     ctx.closePath();
     ctx.fill();
   };
@@ -52,15 +49,25 @@
   Ship.prototype.fireBullet = function () {
     var bullet = new Asteroids.Bullet({
       pos: [this.pos[0], this.pos[1]],
-      speed: 10,
+      speed: 20,
       angle: this.angle,
       game: this.game,
-      wrappable: false
+      wrappable: false,
     });
     this.game.add(bullet);
   };
 
   Ship.prototype.move = function(ctx) {
+    if (this.forward) {
+      this.newSpeed = .35;
+      this.newVel = Asteroids.Util.calcVec(this.newSpeed, this.angle)
+    }
+    if (this.left) {
+      this.angle += -.18;
+    }
+    if (this.right) {
+      this.angle += .18;
+    }
     if (this.newVel) {
       this.drawExhaust(ctx);
       this.vel[0] = this.vel[0] + this.newVel[0]
@@ -70,6 +77,13 @@
     this.pos[0] += this.vel[0];
     this.pos[1] += this.vel[1];
     this.pos = Asteroids.Game.wrap(this.pos);
+  };
+
+  Ship.prototype.protect = function () {
+    this.protected = true;
+    setTimeout(function() {
+      this.protected = false;
+    }.bind(this), 1500);
   };
 
   Ship.prototype.draw = function(ctx){
@@ -84,8 +98,13 @@
     ctx.closePath();
     ctx.fill();
     ctx.lineWidth = 2;
-    ctx.strokeStyle = '#FFF';
+    ctx.strokeStyle = 'white';
     ctx.stroke();
+    if (this.protected) {
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = 'green';
+      ctx.stroke();
+    }
   };
 
 })();
