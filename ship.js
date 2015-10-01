@@ -48,8 +48,25 @@
     ctx.fill();
   };
 
-  Ship.prototype.fireBullet = function () {
+  Ship.prototype.drawFiring = function (ctx) {
+    ctx.fillStyle = "#bfefff";
+    ctx.beginPath();
+
+    pos = this.nosePos();
+    ctx.arc(pos[0], pos[1], 15,
+      0,
+      2 * Math.PI,
+      false);
+    ctx.fill();
+  };
+
+  Ship.prototype.fireBullet = function (ctx) {
     if (this.fireable) {
+      this.drawFiring(ctx);
+
+      var laser = new Audio('laser.wav');
+      laser.play();
+
       var bullet = new Asteroids.Bullet({
         pos: this.nosePos(),
         speed: 20,
@@ -86,7 +103,7 @@
     }
 
     if (this.shooting) {
-      this.fireBullet();
+      this.fireBullet(ctx);
     }
 
     if (this.newVel) {
@@ -101,6 +118,8 @@
   };
 
   Ship.prototype.protect = function () {
+    var shields = new Audio('shields.wav');
+    shields.play();
     this.protected = true;
     setTimeout(function() {
       this.protected = false;

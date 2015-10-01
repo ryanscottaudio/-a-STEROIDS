@@ -112,6 +112,8 @@
 
   Game.prototype.nextLevel = function () {
     if (this.phase !== "leveling") {
+      var level = new Audio('level.wav');
+      level.play();
       this.level += 1;
       this.phase = "leveling";
       window.setTimeout(function() {
@@ -138,6 +140,8 @@
   };
 
   Game.prototype.explode = function (pos) {
+    var boom = new Audio('boom.wav');
+    boom.play();
     var explosion = new Asteroids.Explosion({
       pos: [pos[0], pos[1]],
       game: this,
