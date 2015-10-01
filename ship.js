@@ -41,7 +41,7 @@
   };
 
   Ship.prototype.drawExhaust = function (ctx) {
-    ctx.fillStyle = "rgba(255, 153, 0, " + this.exhaustLevel + ")";
+    ctx.fillStyle = "rgba(255, 0, 0, " + this.exhaustLevel + ")";
     ctx.beginPath();
     ctx.moveTo(this.pos[0] - Math.cos(this.angle) * 10, this.pos[1] - Math.sin(this.angle) * 10);
     ctx.lineTo(this.pos[0] + Math.cos(this.angle - ((2.5 * Math.PI) / 3)) * (this.radius + 10),
@@ -50,6 +50,10 @@
       this.pos[1] + Math.sin(this.angle + ((2.5 * Math.PI) / 3)) * (this.radius + 10));
     ctx.closePath();
     ctx.fill();
+
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = 'rgba(255, 153, 0, ' + this.exhaustLevel + ')';
+    ctx.stroke();
   };
 
   Ship.prototype.drawFiring = function (ctx) {
