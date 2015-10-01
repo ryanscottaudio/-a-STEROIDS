@@ -125,6 +125,8 @@
   };
 
   Game.prototype.end = function () {
+    var end = new Audio('end.wav');
+    end.play();
     this.phase = "after";
     this.objects.shift();
     this.ship = null;

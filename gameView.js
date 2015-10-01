@@ -5,7 +5,8 @@
     this.ctx = ctx;
     this.preventScroll();
     this.setUpListener();
-    this.thruster = new Audio('thruster.wav');
+    start = new Audio('start.wav');
+    start.play();
   };
 
   GameView.prototype.preventScroll = function() {
@@ -50,11 +51,10 @@
       e.preventDefault();
 
       var ship = this.game.ship;
-      if (ship) {
+      if (ship && ship.alive) {
         switch (e.keyIdentifier) {
           case "Up":
             ship.forward = true;
-            this.thruster.play();
             break;
           case "Left":
             ship.left = true;
@@ -73,11 +73,10 @@
       e.preventDefault();
 
       var ship = this.game.ship;
-      if (ship) {
+      if (ship && ship.alive) {
         switch (e.keyIdentifier) {
           case "Up":
             ship.forward = false;
-            this.fadeThruster();
             break;
           case "Left":
             ship.left = false;
@@ -91,18 +90,6 @@
         }
       }
     }.bind(this))
-  };
-
-  GameView.prototype.fadeThruster = function () {
-    var interval = window.setInterval(function () {
-      this.thruster.volume -= .05;
-      if (this.thruster.volume <= .1) {
-        this.thruster.pause();
-        this.thruster.currentTime = 0;
-        this.thruster.volume = 1;
-        window.clearInterval(interval);
-      };
-    }.bind(this), 1);
   };
 
 })();

@@ -29,6 +29,9 @@
       var ship = otherObject;
       this.game.remove(ship);
       this.game.explode(ship.pos);
+      ship.forward = false;
+      ship.fadeThrusterSound();
+      ship.alive = false;
       window.setTimeout(function() {
         this.game.objects.unshift(ship);
         ship.relocate();
