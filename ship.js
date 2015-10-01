@@ -52,7 +52,7 @@
     ctx.fill();
 
     ctx.lineWidth = 5;
-    ctx.strokeStyle = 'rgba(255, 153, 0, ' + this.exhaustLevel + ')';
+    ctx.strokeStyle = 'rgba(255, 153, 0, ' + (this.exhaustLevel - .2) + ')';
     ctx.stroke();
   };
 
@@ -106,6 +106,12 @@
     }
   };
 
+  // Ship.prototype.flickerExhaust = function () {
+  //   if (this.exhaustLevel = 1) {
+  //     this.exhaustLevel -= .5;
+  //   }
+  // };
+
   Ship.prototype.fadeExhaust = function () {
     if (this.exhaustLevel > 0) {
       this.exhaustLevel -= .2;
@@ -117,6 +123,7 @@
   Ship.prototype.move = function(ctx) {
     if (this.forward) {
       this.rampExhaust();
+      // this.flickerExhaust();
       this.thruster.play();
       this.newSpeed = .35;
       this.newVel = Asteroids.Util.calcVec(this.newSpeed, this.angle)

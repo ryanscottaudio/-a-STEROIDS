@@ -10,6 +10,7 @@
     });
     this.broken = options.broken || false;
     this.setSpeedAndRadius(options);
+    this.sides = Math.floor(5 + Math.random() * 3);
   };
 
   Asteroids.Util.inherits(Asteroid, Asteroids.MovingObject);
@@ -30,6 +31,9 @@
       this.game.remove(ship);
       this.game.explode(ship.pos);
       ship.forward = false;
+      ship.shooting = false;
+      ship.right = false;
+      ship.left = false;
       ship.fadeThrusterSound();
       ship.alive = false;
       window.setTimeout(function() {
@@ -41,21 +45,24 @@
   };
 
   Asteroid.prototype.draw = function(ctx){
-    x = this.pos[0];
-    y = this.pos[1];
 
-    ctx.fillStyle = this.color;
+    var sides = this.sides;
+    var size = this.radius;
+    var Xcenter = this.pos[0];
+    var Ycenter = this.pos[1];
+
     ctx.beginPath();
-
-    ctx.arc(this.pos[0], this.pos[1], this.radius,
-      0,
-      2 * Math.PI,
-      false);
+    ctx.fillStyle = this.color;
+    ctx.moveTo (Xcenter + size * Math.cos(0), Ycenter + size *  Math.sin(0));
+    for (var i = 1; i <= sides + 1;i += 1) {
+        ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / sides), Ycenter + size * Math.sin(i * 2 * Math.PI / sides));
+    }
     ctx.fill();
 
+    ctx.strokeStyle = "#666";
     ctx.lineWidth = 10;
-    ctx.strokeStyle = '#666';
     ctx.stroke();
+
   };
 
 })();
